@@ -20,12 +20,6 @@ export interface OutputConfig {
    * @default 2
    */
   indent?: number
-
-  /**
-   * Whether to add a warning comment in the generated file
-   * @default true
-   */
-  addWarningComment?: boolean
 }
 
 /**

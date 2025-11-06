@@ -1,5 +1,5 @@
 import type { Plugin, ResolvedConfig } from 'vite'
-import { normalizePath } from 'vite'
+import { normalizePath, loadEnv } from 'vite'
 import type {
   PluginOptions,
   NormalizedPluginOptions,
@@ -27,7 +27,6 @@ function normalizeOptions(
     output: {
       path: options.output?.path || getDefaultOutputPath(),
       indent: options.output?.indent ?? 2,
-      addWarningComment: options.output?.addWarningComment ?? true,
     },
     environments: options.environments || {},
     validate: options.validate ?? true,
@@ -44,6 +43,7 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
   const normalizedOptions = normalizeOptions(options)
   let viteConfig: ResolvedConfig
   let outputPath: string
+  let loadedEnvVars: Record<string, string> | undefined
 
   return {
     name: 'vite-plugin-firebase-config',
@@ -57,6 +57,16 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
         resolvePath(config.root, normalizedOptions.output.path)
       )
 
+      // Load environment variables from .env files if using env source
+      if (normalizedOptions.source === 'env') {
+        loadedEnvVars = loadEnv(config.mode, config.root, '')
+
+        logger.debug(
+          `Loaded environment variables for mode: ${config.mode}`,
+          normalizedOptions.debug
+        )
+      }
+
       logger.debug(
         `Vite config resolved (mode: ${config.mode}, command: ${config.command})`,
         normalizedOptions.debug
@@ -69,7 +79,11 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
         validateOutputPath(normalizedOptions.output.path)
 
         // Resolve configuration
-        const config = resolveConfig(normalizedOptions, viteConfig.mode)
+        const config = resolveConfig(
+          normalizedOptions,
+          viteConfig.mode,
+          loadedEnvVars
+        )
 
         // Validate configuration
         if (normalizedOptions.validate && !validateConfig(config)) {
@@ -115,7 +129,14 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
           logger.info('Environment file changed, regenerating config...')
 
           try {
-            const config = resolveConfig(normalizedOptions, viteConfig.mode)
+            // Reload env vars when .env files change
+            loadedEnvVars = loadEnv(viteConfig.mode, viteConfig.root, '')
+
+            const config = resolveConfig(
+              normalizedOptions,
+              viteConfig.mode,
+              loadedEnvVars
+            )
 
             if (normalizedOptions.validate && !validateConfig(config)) {
               return

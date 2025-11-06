@@ -8,15 +8,17 @@ import { ALL_FIELDS } from './validator'
  */
 export function readConfigFromEnv(
   prefix: string = 'VITE_FIREBASE_',
-  debug: boolean = false
+  debug: boolean = false,
+  envVars?: Record<string, string>
 ): Partial<FirebaseConfig> {
   const config: Partial<FirebaseConfig> = {}
+  const envSource = envVars || env
 
   logger.debug(`Reading config from env with prefix: ${prefix}`, debug)
 
   for (const field of ALL_FIELDS) {
     const envKey = `${prefix}${toScreamingSnakeCase(field)}`
-    const value = env[envKey]
+    const value = envSource[envKey]
 
     if (value) {
       config[field] = value
@@ -45,7 +47,8 @@ function maskSensitiveValue(field: string, value: string): string {
  */
 export function resolveConfig(
   options: PluginOptions,
-  mode: string
+  mode: string,
+  envVars?: Record<string, string>
 ): Partial<FirebaseConfig> {
   let config: Partial<FirebaseConfig> = {}
 
@@ -54,7 +57,7 @@ export function resolveConfig(
     config = { ...options.config }
     logger.debug('Using inline config', options.debug || false)
   } else {
-    config = readConfigFromEnv(options.envPrefix, options.debug)
+    config = readConfigFromEnv(options.envPrefix, options.debug, envVars)
   }
 
   // Apply environment-specific overrides
