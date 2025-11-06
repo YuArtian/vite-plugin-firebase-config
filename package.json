@@ -10,16 +10,16 @@
     "config",
     "environment-variables"
   ],
-  "author": "",
+  "author": "yuartian",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/vite-plugin-firebase-config.git"
+    "url": "git+https://github.com/YuArtian/vite-plugin-firebase-config.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/vite-plugin-firebase-config/issues"
+    "url": "https://github.com/YuArtian/vite-plugin-firebase-config/issues"
   },
-  "homepage": "https://github.com/yourusername/vite-plugin-firebase-config#readme",
+  "homepage": "https://github.com/YuArtian/vite-plugin-firebase-config#readme",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
