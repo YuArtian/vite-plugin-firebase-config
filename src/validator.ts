@@ -31,7 +31,8 @@ export const ALL_FIELDS = [...REQUIRED_FIELDS, ...OPTIONAL_FIELDS]
  * Checks for required fields and warns about unknown fields
  */
 export function validateConfig(
-  config: Partial<FirebaseConfig>
+  config: Partial<FirebaseConfig>,
+  strictValidation: boolean = true
 ): config is FirebaseConfig {
   const errors: string[] = []
   const warnings: string[] = []
@@ -70,12 +71,18 @@ export function validateConfig(
     warnings.forEach((warning) => logger.warn(warning))
   }
 
-  // Log and throw errors
+  // Handle errors based on strictValidation mode
   if (errors.length > 0) {
-    errors.forEach((error) => logger.error(error))
-    throw new Error(
-      `Firebase configuration validation failed:\n${errors.join('\n')}`
-    )
+    if (strictValidation) {
+      // Strict mode: log errors and throw
+      errors.forEach((error) => logger.error(error))
+      throw new Error(
+        `Firebase configuration validation failed:\n${errors.join('\n')}`
+      )
+    } else {
+      // Non-strict mode: convert errors to warnings
+      errors.forEach((error) => logger.warn(error))
+    }
   }
 
   return true
@@ -111,3 +118,20 @@ export function getMissingFields(
   return REQUIRED_FIELDS.filter((field) => !config[field])
 }
 
+/**
+ * Fill missing required fields with empty strings
+ * Used in non-strict validation mode to ensure all fields exist
+ */
+export function fillMissingFields(
+  config: Partial<FirebaseConfig>
+): FirebaseConfig {
+  const filledConfig = { ...config } as FirebaseConfig
+
+  for (const field of REQUIRED_FIELDS) {
+    if (!filledConfig[field]) {
+      filledConfig[field] = ''
+    }
+  }
+
+  return filledConfig
+}

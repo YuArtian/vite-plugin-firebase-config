@@ -1,7 +1,7 @@
 import { env } from 'node:process'
 import type { FirebaseConfig, PluginOptions, TransformFunction } from './types'
 import { toScreamingSnakeCase, logger, deepMerge } from './utils'
-import { ALL_FIELDS } from './validator'
+import { ALL_FIELDS, fillMissingFields } from './validator'
 
 /**
  * Read Firebase configuration from environment variables
@@ -48,7 +48,8 @@ function maskSensitiveValue(field: string, value: string): string {
 export function resolveConfig(
   options: PluginOptions,
   mode: string,
-  envVars?: Record<string, string>
+  envVars?: Record<string, string>,
+  fillEmptyFields: boolean = false
 ): Partial<FirebaseConfig> {
   let config: Partial<FirebaseConfig> = {}
 
@@ -64,6 +65,11 @@ export function resolveConfig(
   if (options.environments && options.environments[mode]) {
     logger.debug(`Applying overrides for mode: ${mode}`, options.debug || false)
     config = deepMerge(config, options.environments[mode])
+  }
+
+  // Fill missing fields with empty strings if requested
+  if (fillEmptyFields) {
+    config = fillMissingFields(config)
   }
 
   return config

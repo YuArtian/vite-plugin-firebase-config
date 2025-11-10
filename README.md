@@ -88,6 +88,9 @@ firebaseConfig({
   // Enable validation
   validate: true,
   
+  // Enable strict validation mode
+  strictValidation: false,
+  
   // Enable hot reload in dev mode
   watch: true,
   
@@ -141,6 +144,24 @@ firebaseConfig({
 })
 ```
 
+### Validation Modes
+
+By default, the plugin uses non-strict validation mode (`strictValidation: false`), which shows warnings for missing configuration but allows the build to continue. This is useful during development when you might not have all configuration ready yet.
+
+```typescript
+// Non-strict mode (default) - Shows warnings, allows build to continue
+firebaseConfig({
+  strictValidation: false  // Missing fields filled with empty strings
+})
+
+// Strict mode - Throws errors and stops build if configuration is invalid
+firebaseConfig({
+  strictValidation: true  // Recommended for production builds
+})
+```
+
+**Recommendation**: Use `strictValidation: false` during development for flexibility, and `strictValidation: true` in production builds to ensure all configuration is properly set.
+
 ## 📖 API Reference
 
 ### `PluginOptions`
@@ -155,6 +176,7 @@ firebaseConfig({
 | `output.addWarningComment` | `boolean` | `true` | Add warning comment to file |
 | `environments` | `Record<string, Partial<FirebaseConfig>>` | `{}` | Environment-specific overrides |
 | `validate` | `boolean` | `true` | Validate configuration |
+| `strictValidation` | `boolean` | `false` | When false, shows warnings instead of errors for missing fields |
 | `watch` | `boolean` | `true` | Enable hot reload |
 | `transform` | `(config) => config` | `undefined` | Custom transform function |
 | `debug` | `boolean` | `false` | Enable debug logging |

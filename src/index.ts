@@ -30,6 +30,7 @@ function normalizeOptions(
     },
     environments: options.environments || {},
     validate: options.validate ?? true,
+    strictValidation: options.strictValidation ?? false,
     watch: options.watch ?? true,
     transform: options.transform,
     debug: options.debug ?? false,
@@ -82,11 +83,15 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
         const config = resolveConfig(
           normalizedOptions,
           viteConfig.mode,
-          loadedEnvVars
+          loadedEnvVars,
+          !normalizedOptions.strictValidation
         )
 
         // Validate configuration
-        if (normalizedOptions.validate && !validateConfig(config)) {
+        if (
+          normalizedOptions.validate &&
+          !validateConfig(config, normalizedOptions.strictValidation)
+        ) {
           throw new Error('Firebase configuration validation failed')
         }
 
@@ -135,10 +140,14 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
             const config = resolveConfig(
               normalizedOptions,
               viteConfig.mode,
-              loadedEnvVars
+              loadedEnvVars,
+              !normalizedOptions.strictValidation
             )
 
-            if (normalizedOptions.validate && !validateConfig(config)) {
+            if (
+              normalizedOptions.validate &&
+              !validateConfig(config, normalizedOptions.strictValidation)
+            ) {
               return
             }
 

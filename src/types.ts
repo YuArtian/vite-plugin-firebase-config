@@ -70,6 +70,14 @@ export interface PluginOptions {
   validate?: boolean
 
   /**
+   * Enable strict validation mode
+   * When false, missing required fields will show warnings instead of throwing errors
+   * When true, missing required fields will throw errors and stop the build
+   * @default false
+   */
+  strictValidation?: boolean
+
+  /**
    * Enable hot reload in development mode
    * @default true
    */
