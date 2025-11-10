@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0] - 2025-11-10
 
 ### Added
+
 - New `strictValidation` option for flexible validation mode (defaults to `false`)
   - When `false`: Shows warnings for missing required fields but allows build to continue
   - When `true`: Throws errors and stops build for missing required fields
@@ -16,16 +17,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation for validation modes in README
 
 ### Changed
+
 - Default validation behavior is now non-strict (warnings instead of errors)
 - Missing required fields are automatically filled with empty strings in non-strict mode
 
 ### Improved
+
 - Better developer experience during development by not blocking builds when Firebase config is incomplete
 - More flexible configuration management across different environments
 
 ## [0.1.0] - 2025-11-10
 
 ### Added
+
 - Initial release
 - Automatic Firebase configuration sync from environment variables to static files
 - Support for multiple environments (dev, staging, production)
@@ -34,4 +38,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom transform functions
 - Debug logging
 - TypeScript support
-
