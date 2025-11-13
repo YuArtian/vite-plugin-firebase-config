@@ -80,6 +80,7 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
         validateOutputPath(normalizedOptions.output.path)
 
         // Resolve configuration
+        // In non-strict mode, fillEmptyFields=true will ensure all required fields exist
         const config = resolveConfig(
           normalizedOptions,
           viteConfig.mode,
@@ -88,14 +89,13 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
         )
 
         // Validate configuration
-        if (
-          normalizedOptions.validate &&
-          !validateConfig(config, normalizedOptions.strictValidation)
-        ) {
-          throw new Error('Firebase configuration validation failed')
+        // In non-strict mode, validation will always return true even with errors
+        if (normalizedOptions.validate) {
+          validateConfig(config, normalizedOptions.strictValidation)
         }
 
-        // After validation, we can safely cast to FirebaseConfig
+        // After validation, cast to FirebaseConfig
+        // In non-strict mode, missing fields are filled with empty strings
         const validatedConfig = config as FirebaseConfig
 
         // Apply custom transform
@@ -144,11 +144,10 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
               !normalizedOptions.strictValidation
             )
 
-            if (
-              normalizedOptions.validate &&
-              !validateConfig(config, normalizedOptions.strictValidation)
-            ) {
-              return
+            // Validate configuration
+            // In non-strict mode, validation will always return true
+            if (normalizedOptions.validate) {
+              validateConfig(config, normalizedOptions.strictValidation)
             }
 
             const validatedConfig = config as FirebaseConfig

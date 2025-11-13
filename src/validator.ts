@@ -80,11 +80,15 @@ export function validateConfig(
         `Firebase configuration validation failed:\n${errors.join('\n')}`
       )
     } else {
-      // Non-strict mode: convert errors to warnings
+      // Non-strict mode: convert errors to warnings and continue
       errors.forEach((error) => logger.warn(error))
+      logger.warn(
+        'Validation errors detected but continuing in non-strict mode. Empty fields will be filled with empty strings.'
+      )
     }
   }
 
+  // In non-strict mode, always return true even if there are errors
   return true
 }
 
