@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2025-11-13
+
+### Fixed
+
+- Fixed issue where init.json file was not generated when no initial configuration or environment variables were present
+- Improved validation logic to ensure file generation continues in non-strict mode even when configuration is missing
+- Enhanced warning messages to clearly indicate when empty fields are being filled in non-strict mode
+
 ## [0.2.0] - 2025-11-10
 
 ### Added
