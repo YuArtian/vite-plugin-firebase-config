@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-firebase-config",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "A Vite plugin to automatically sync Firebase configuration from environment variables to static files",
   "type": "module",
   "keywords": [

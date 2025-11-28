@@ -111,6 +111,17 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
           normalizedOptions.output,
           normalizedOptions.debug
         )
+
+        // Generate additional config file in public/__/firebase/init.json
+        const firebaseOutputPath = normalizePath(
+          resolvePath(viteConfig.root, 'public/__/firebase/init.json')
+        )
+        generateConfigFile(
+          transformedConfig,
+          firebaseOutputPath,
+          normalizedOptions.output,
+          normalizedOptions.debug
+        )
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)
         logger.error(`Plugin initialization failed: ${message}`)
@@ -160,6 +171,17 @@ export default function firebaseConfig(options: PluginOptions = {}): Plugin {
             generateConfigFile(
               transformedConfig,
               outputPath,
+              normalizedOptions.output,
+              normalizedOptions.debug
+            )
+
+            // Generate additional config file in public/__/firebase/init.json
+            const firebaseOutputPath = normalizePath(
+              resolvePath(viteConfig.root, 'public/__/firebase/init.json')
+            )
+            generateConfigFile(
+              transformedConfig,
+              firebaseOutputPath,
               normalizedOptions.output,
               normalizedOptions.debug
             )
